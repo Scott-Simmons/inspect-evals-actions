@@ -60,10 +60,18 @@ jobs:
         run: |
           uv sync --frozen --group test_py311_or_lower --extra test
 
+      - name: Pre-test check disk space
+        run: df -h
+
       - name: Run full test suite with report log
         id: tests
         run: |
-          uv run pytest -rA --color=yes --durations=20 --report-log=pytest-report.jsonl
+          uv run pytest -rA --color=yes \
+            --durations=20 \
+            --report-log=pytest-report.jsonl
+
+      - name: Post-test check disk space
+        run: df -h
 
       - name: Detect tests >=10s that are missing @pytest.mark.slow
         id: slow_check
